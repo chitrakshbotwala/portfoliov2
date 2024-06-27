@@ -1,0 +1,89 @@
+import { type FC } from 'react';
+
+import { Button } from 'reakit/Button';
+import {
+  Popover,
+  PopoverArrow,
+  PopoverDisclosure,
+  usePopoverState,
+} from 'reakit/Popover';
+
+import { AnimatedIcon } from '~/components/icons/AnimatedIcon/AnimatedIcon';
+import { EmailIcon } from '~/components/icons/EmailIcon';
+import { GitHubIcon } from '~/components/icons/GitHubIcon';
+import { LinkedInIcon } from '~/components/icons/LinkedInIcon';
+import { SocialsIcon } from '~/components/icons/SocialsIcon';
+import { TwitterIcon } from '~/components/icons/TwitterIcon';
+import { socials } from '~/consts/socials.const';
+
+import styles from './SocialLinks.module.css';
+
+type LinksProps = {
+  animate?: boolean;
+  onEmailDialogOpen: () => void;
+};
+
+const Links: FC<LinksProps> = ({ animate, onEmailDialogOpen }) => (
+  <>
+    <Button
+      className={styles.social}
+      onClick={onEmailDialogOpen}
+      title="E-mail"
+    >
+      <AnimatedIcon animationDelay={animate ? 3500 : 0}>
+        <EmailIcon />
+      </AnimatedIcon>
+    </Button>
+    <a
+      className={styles.social}
+      href={socials.github}
+      rel="noopener noreferrer"
+      target="_blank"
+      title="GitHub"
+    >
+      <AnimatedIcon animationDelay={animate ? 2000 : 0}>
+        <GitHubIcon />
+      </AnimatedIcon>
+    </a>
+  </>
+);
+
+type Props = {
+  onEmailDialogOpen: () => void;
+};
+
+export const SocialLinks: FC<Props> = ({ onEmailDialogOpen }) => {
+  const popover = usePopoverState({
+    animated: 500,
+    placement: 'bottom-start',
+  });
+
+  return (
+    <>
+      <div className={styles.desktopButtons}>
+        <Links animate onEmailDialogOpen={onEmailDialogOpen} />
+      </div>
+      <PopoverDisclosure
+        {...popover}
+        className={styles.mobileButton}
+        title="Socials"
+      >
+        <AnimatedIcon animationDelay={2000}>
+          <SocialsIcon />
+        </AnimatedIcon>
+      </PopoverDisclosure>
+      <Popover {...popover} aria-label="Social links popover">
+        <div className={styles.popover}>
+          <PopoverArrow
+            {...popover}
+            className={styles.popoverArrow}
+          />
+          <span className={styles.title}>Socials</span>
+          <div className={styles.grid}>
+            <Links onEmailDialogOpen={onEmailDialogOpen} />
+          </div>
+        </div>
+      </Popover>
+    </>
+  );
+};
